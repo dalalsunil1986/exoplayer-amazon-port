@@ -15,6 +15,8 @@ import com.android.builder.core.BuilderConstants
 
 apply plugin: 'com.android.library'
 apply plugin: 'bintray-release'
+apply plugin: 'com.github.dcendents.android-maven'
+group='com.github.rubensousa'
 
 android {
     compileSdkVersion project.ext.compileSdkVersion
@@ -50,7 +52,7 @@ dependencies {
     androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
     androidTestCompile 'org.mockito:mockito-core:1.9.5'
-    compile 'com.android.support:support-annotations:25.0.1'
+    compile 'com.android.support:support-annotations:25.3.0'
 }
 
 android.libraryVariants.all { variant ->
