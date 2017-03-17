@@ -16,7 +16,7 @@ import com.android.builder.core.BuilderConstants
 apply plugin: 'com.android.library'
 apply plugin: 'bintray-release'
 apply plugin: 'com.github.dcendents.android-maven'
-group='com.github.rubensousa'
+group = 'com.github.rubensousa'
 
 android {
     compileSdkVersion project.ext.compileSdkVersion
@@ -55,6 +55,27 @@ dependencies {
     compile 'com.android.support:support-annotations:25.3.0'
 }
 
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    failOnError false
+    source = android.sourceSets.main.java.sourceFiles
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
 android.libraryVariants.all { variant ->
     def name = variant.buildType.name
     if (name.equals(BuilderConstants.DEBUG)) {
@@ -74,7 +95,7 @@ android.libraryVariants.all { variant ->
         classpath = files(variant.javaCompile.classpath.files, project.android.getBootClasspath())
         options {
             links "http://docs.oracle.com/javase/7/docs/api/"
-            linksOffline "https://developer.android.com/reference","${android.sdkDirectory}/docs/reference"
+            linksOffline "https://developer.android.com/reference", "${android.sdkDirectory}/docs/reference"
             encoding = 'UTF-8'
         }
         exclude '**/BuildConfig.java'
