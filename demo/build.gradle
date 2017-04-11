@@ -32,6 +32,9 @@ android {
             jniDebuggable = true
         }
     }
+    lintOptions {
+        abortOnError false
+    }
 
     productFlavors {
         noExtensions
@@ -40,7 +43,7 @@ android {
 }
 
 dependencies {
-    compile project(':library')
+    compile project(':exoplayer2')
     withExtensionsCompile project(path: ':extension-ffmpeg')
     withExtensionsCompile project(path: ':extension-flac')
     withExtensionsCompile project(path: ':extension-opus')

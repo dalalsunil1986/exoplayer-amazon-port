@@ -30,7 +30,7 @@ android {
 }
 
 dependencies {
-    compile project(':library')
+    compile project(':exoplayer2')
     androidTestCompile project(':testutils')
 }
 
