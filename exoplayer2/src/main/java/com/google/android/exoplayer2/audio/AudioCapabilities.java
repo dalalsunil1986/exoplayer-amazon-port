@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioFormat;
 import android.media.AudioManager;
+import android.os.Build;
 import android.provider.Settings;
 import java.util.Arrays;
 
@@ -63,10 +64,12 @@ public final class AudioCapabilities {
   @SuppressLint("InlinedApi")
   /* package */ static AudioCapabilities getCapabilities(Context context, Intent intent) {
     // AMZN_CHANGE_BEGIN
-    int isSurroundSoundEnabled = Settings.Global.getInt(context.getContentResolver(),
-            EXTERNAL_SURROUND_SOUND_ENABLED, 0);
-    if (isSurroundSoundEnabled == 1) {
-      return SURROUND_AUDIO_CAPABILITIES;
+    if(Build.VERSION.SDK_INT >= 17) {
+      int isSurroundSoundEnabled = Settings.Global.getInt(context.getContentResolver(),
+              EXTERNAL_SURROUND_SOUND_ENABLED, 0);
+      if (isSurroundSoundEnabled == 1) {
+        return SURROUND_AUDIO_CAPABILITIES;
+      }
     }
     // AMZN_CHANGE_END
     if (intent == null || intent.getIntExtra(AudioManager.EXTRA_AUDIO_PLUG_STATE, 0) == 0) {
