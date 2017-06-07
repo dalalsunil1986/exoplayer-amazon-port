@@ -18,11 +18,13 @@ android {
     buildToolsVersion project.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 9
+        minSdkVersion project.ext.minSdkVersion
         targetSdkVersion project.ext.targetSdkVersion
     }
 }
 
 dependencies {
-    compile project(':exoplayer2')
+    compile project(':library-core')
+    androidTestCompile project(':library-dash')
+    androidTestCompile project(':library-hls')
 }

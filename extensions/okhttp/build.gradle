@@ -18,14 +18,30 @@ android {
     buildToolsVersion project.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 9
+        minSdkVersion project.ext.minSdkVersion
         targetSdkVersion project.ext.targetSdkVersion
+    }
+
+    lintOptions {
+        // See: https://github.com/square/okio/issues/58
+        warning 'InvalidPackage'
     }
 }
 
 dependencies {
-    compile project(':exoplayer2')
-    compile('com.squareup.okhttp3:okhttp:3.4.1') {
+    compile project(':library-core')
+    compile('com.squareup.okhttp3:okhttp:3.6.0') {
         exclude group: 'org.json'
     }
 }
+
+ext {
+    javadocTitle = 'OkHttp extension'
+}
+apply from: '../../javadoc_library.gradle'
+
+ext {
+    releaseArtifact = 'extension-okhttp'
+    releaseDescription = 'OkHttp extension for ExoPlayer.'
+}
+apply from: '../../publish.gradle'

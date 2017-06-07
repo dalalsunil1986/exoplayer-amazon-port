@@ -32,8 +32,10 @@ android {
             jniDebuggable = true
         }
     }
+
     lintOptions {
-        abortOnError false
+        // The demo app does not have translations.
+        disable 'MissingTranslation'
     }
 
     productFlavors {
@@ -43,7 +45,11 @@ android {
 }
 
 dependencies {
-    compile project(':exoplayer2')
+    compile project(':library-core')
+    compile project(':library-dash')
+    compile project(':library-hls')
+    compile project(':library-smoothstreaming')
+    compile project(':library-ui')
     withExtensionsCompile project(path: ':extension-ffmpeg')
     withExtensionsCompile project(path: ':extension-flac')
     withExtensionsCompile project(path: ':extension-opus')

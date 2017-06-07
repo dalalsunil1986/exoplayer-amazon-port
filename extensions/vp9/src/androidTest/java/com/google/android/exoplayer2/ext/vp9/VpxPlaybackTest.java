@@ -19,9 +19,11 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Looper;
 import android.test.InstrumentationTestCase;
+import android.util.Log;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Renderer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.mkv.MatroskaExtractor;
@@ -38,7 +40,10 @@ public class VpxPlaybackTest extends InstrumentationTestCase {
 
   private static final String BEAR_URI = "asset:///bear-vp9.webm";
   private static final String BEAR_ODD_DIMENSIONS_URI = "asset:///bear-vp9-odd-dimensions.webm";
+  private static final String ROADTRIP_10BIT_URI = "asset:///roadtrip-vp92-10bit.webm";
   private static final String INVALID_BITSTREAM_URI = "asset:///invalid-bitstream.webm";
+
+  private static final String TAG = "VpxPlaybackTest";
 
   public void testBasicPlayback() throws ExoPlaybackException {
     playUri(BEAR_URI);
@@ -46,6 +51,15 @@ public class VpxPlaybackTest extends InstrumentationTestCase {
 
   public void testOddDimensionsPlayback() throws ExoPlaybackException {
     playUri(BEAR_ODD_DIMENSIONS_URI);
+  }
+
+  public void test10BitProfile2Playback() throws ExoPlaybackException {
+    if (VpxLibrary.isHighBitDepthSupported()) {
+      Log.d(TAG, "High Bit Depth supported.");
+      playUri(ROADTRIP_10BIT_URI);
+      return;
+    }
+    Log.d(TAG, "High Bit Depth not supported.");
   }
 
   public void testInvalidBitstream() {
@@ -118,6 +132,11 @@ public class VpxPlaybackTest extends InstrumentationTestCase {
 
     @Override
     public void onPositionDiscontinuity() {
+      // Do nothing.
+    }
+
+    @Override
+    public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
       // Do nothing.
     }
 

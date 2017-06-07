@@ -19,11 +19,13 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.Surface;
-import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.Format;
+import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.audio.AudioRendererEventListener;
@@ -34,7 +36,7 @@ import com.google.android.exoplayer2.drm.FrameworkMediaCrypto;
 import com.google.android.exoplayer2.playbacktests.util.HostActivity.HostedTest;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.trackselection.AdaptiveVideoTrackSelection;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
@@ -63,7 +65,8 @@ public abstract class ExoHostedTest implements HostedTest, ExoPlayer.EventListen
   public static final long EXPECTED_PLAYING_TIME_MEDIA_DURATION_MS = -2;
   public static final long EXPECTED_PLAYING_TIME_UNSET = -1;
 
-  private final String tag;
+  protected final String tag;
+
   private final boolean failOnPlayerError;
   private final long expectedPlayingTimeMs;
   private final DecoderCounters videoDecoderCounters;
@@ -223,6 +226,11 @@ public abstract class ExoHostedTest implements HostedTest, ExoPlayer.EventListen
   }
 
   @Override
+  public final void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+    // Do nothing.
+  }
+
+  @Override
   public final void onTimelineChanged(Timeline timeline, Object manifest) {
     // Do nothing.
   }
@@ -312,16 +320,16 @@ public abstract class ExoHostedTest implements HostedTest, ExoPlayer.EventListen
   @SuppressWarnings("unused")
   protected MappingTrackSelector buildTrackSelector(HostActivity host,
       BandwidthMeter bandwidthMeter) {
-    return new DefaultTrackSelector(new AdaptiveVideoTrackSelection.Factory(bandwidthMeter));
+    return new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(bandwidthMeter));
   }
 
   @SuppressWarnings("unused")
   protected SimpleExoPlayer buildExoPlayer(HostActivity host, Surface surface,
       MappingTrackSelector trackSelector,
       DrmSessionManager<FrameworkMediaCrypto> drmSessionManager) {
-    SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(host, trackSelector,
-        new DefaultLoadControl(), drmSessionManager, SimpleExoPlayer.EXTENSION_RENDERER_MODE_OFF,
-        0);
+    RenderersFactory renderersFactory = new DefaultRenderersFactory(host, drmSessionManager,
+        DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF, 0);
+    SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(renderersFactory, trackSelector);
     player.setVideoSurface(surface);
     return player;
   }
