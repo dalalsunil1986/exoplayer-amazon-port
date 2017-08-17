@@ -34,7 +34,10 @@ dependencies {
 ext {
     releaseArtifact = 'exoplayer'
     releaseDescription = 'The ExoPlayer library (all modules).'
+    POM_ARTIFACT_ID = releaseArtifact
+    POM_DESCRIPTION = releaseDescription
 }
+
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
 apply from: rootProject.file('gradle/gradle-bintray-upload.gradle')

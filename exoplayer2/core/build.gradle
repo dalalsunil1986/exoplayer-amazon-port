@@ -49,4 +49,10 @@ ext {
 ext {
     releaseArtifact = 'exoplayer-core'
     releaseDescription = 'The ExoPlayer library core module.'
+    POM_ARTIFACT_ID = releaseArtifact
+    POM_DESCRIPTION = releaseDescription
 }
+
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
+apply from: rootProject.file('gradle/gradle-bintray-upload.gradle')

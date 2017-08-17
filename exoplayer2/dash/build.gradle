@@ -51,4 +51,10 @@ ext {
 ext {
     releaseArtifact = 'exoplayer-dash'
     releaseDescription = 'The ExoPlayer library DASH module.'
+    POM_ARTIFACT_ID = releaseArtifact
+    POM_DESCRIPTION = releaseDescription
 }
+
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
+apply from: rootProject.file('gradle/gradle-bintray-upload.gradle')

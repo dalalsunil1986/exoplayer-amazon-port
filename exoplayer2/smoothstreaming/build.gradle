@@ -50,4 +50,10 @@ ext {
 ext {
     releaseArtifact = 'exoplayer-smoothstreaming'
     releaseDescription = 'The ExoPlayer library SmoothStreaming module.'
+    POM_ARTIFACT_ID = releaseArtifact
+    POM_DESCRIPTION = releaseDescription
 }
+
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
+apply from: rootProject.file('gradle/gradle-bintray-upload.gradle')
