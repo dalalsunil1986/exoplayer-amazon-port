@@ -49,7 +49,7 @@ ext {
 }
 
 ext {
-    releaseArtifact = 'exoplayer-dash'
+    releaseArtifact = 'exoplayer2-dash'
     releaseDescription = 'The ExoPlayer library DASH module.'
     POM_ARTIFACT_ID = releaseArtifact
     POM_DESCRIPTION = releaseDescription

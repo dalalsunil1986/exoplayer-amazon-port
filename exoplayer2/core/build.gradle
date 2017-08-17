@@ -47,7 +47,7 @@ ext {
 }
 
 ext {
-    releaseArtifact = 'exoplayer-core'
+    releaseArtifact = 'exoplayer2-core'
     releaseDescription = 'The ExoPlayer library core module.'
     POM_ARTIFACT_ID = releaseArtifact
     POM_DESCRIPTION = releaseDescription

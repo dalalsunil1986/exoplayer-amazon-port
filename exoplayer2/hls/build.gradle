@@ -42,7 +42,7 @@ ext {
 }
 
 ext {
-    releaseArtifact = 'exoplayer-hls'
+    releaseArtifact = 'exoplayer2-hls'
     releaseDescription = 'The ExoPlayer library HLS module.'
     POM_ARTIFACT_ID = releaseArtifact
     POM_DESCRIPTION = releaseDescription
