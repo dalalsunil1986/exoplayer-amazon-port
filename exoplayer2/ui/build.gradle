@@ -30,14 +30,13 @@ android {
 }
 
 dependencies {
-    compile project(':library-core')
+    compile project(':exoplayer2-core')
     compile 'com.android.support:support-annotations:' + supportLibraryVersion
 }
 
 ext {
     javadocTitle = 'UI module'
 }
-apply from: '../../javadoc_library.gradle'
 
 ext {
     releaseArtifact = 'exoplayer-ui'

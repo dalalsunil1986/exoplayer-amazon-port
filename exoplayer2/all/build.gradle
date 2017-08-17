@@ -24,15 +24,17 @@ android {
 }
 
 dependencies {
-    compile project(':library-core')
-    compile project(':library-dash')
-    compile project(':library-hls')
-    compile project(':library-smoothstreaming')
-    compile project(':library-ui')
+    compile project(':exoplayer2-core')
+    compile project(':exoplayer2-dash')
+    compile project(':exoplayer2-hls')
+    compile project(':exoplayer2-smoothstreaming')
+    compile project(':exoplayer2-ui')
 }
 
 ext {
     releaseArtifact = 'exoplayer'
     releaseDescription = 'The ExoPlayer library (all modules).'
 }
-apply from: '../../publish.gradle'
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
+apply from: rootProject.file('gradle/gradle-bintray-upload.gradle')

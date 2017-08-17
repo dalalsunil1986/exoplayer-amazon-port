@@ -11,12 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-include ':library'
-include ':library-core'
-include ':library-dash'
-include ':library-hls'
-include ':library-smoothstreaming'
-include ':library-ui'
+include ':exoplayer2'
+include ':exoplayer2-core'
+include ':exoplayer2-dash'
+include ':exoplayer2-hls'
+include ':exoplayer2-smoothstreaming'
+include ':exoplayer2-ui'
 include ':testutils'
 include ':demo'
 include ':playbacktests'
@@ -29,12 +29,12 @@ include ':extension-vp9'
 // Uncomment the following line to use the Cronet Extension.
 // include ':extension-cronet'
 
-project(':library').projectDir = new File(settingsDir, 'library/all')
-project(':library-core').projectDir = new File(settingsDir, 'library/core')
-project(':library-dash').projectDir = new File(settingsDir, 'library/dash')
-project(':library-hls').projectDir = new File(settingsDir, 'library/hls')
-project(':library-smoothstreaming').projectDir = new File(settingsDir, 'library/smoothstreaming')
-project(':library-ui').projectDir = new File(settingsDir, 'library/ui')
+project(':exoplayer2').projectDir = new File(settingsDir, 'exoplayer2/all')
+project(':exoplayer2-core').projectDir = new File(settingsDir, 'exoplayer2/core')
+project(':exoplayer2-dash').projectDir = new File(settingsDir, 'exoplayer2/dash')
+project(':exoplayer2-hls').projectDir = new File(settingsDir, 'exoplayer2/hls')
+project(':exoplayer2-smoothstreaming').projectDir = new File(settingsDir, 'exoplayer2/smoothstreaming')
+project(':exoplayer2-ui').projectDir = new File(settingsDir, 'exoplayer2/ui')
 project(':extension-ffmpeg').projectDir = new File(settingsDir, 'extensions/ffmpeg')
 project(':extension-flac').projectDir = new File(settingsDir, 'extensions/flac')
 project(':extension-gvr').projectDir = new File(settingsDir, 'extensions/gvr')

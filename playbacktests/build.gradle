@@ -24,7 +24,7 @@ android {
 }
 
 dependencies {
-    compile project(':library-core')
-    androidTestCompile project(':library-dash')
-    androidTestCompile project(':library-hls')
+    compile project(':exoplayer2-core')
+    androidTestCompile project(':exoplayer2-dash')
+    androidTestCompile project(':exoplayer2-hls')
 }
