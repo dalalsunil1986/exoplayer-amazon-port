@@ -77,8 +77,8 @@ public class MediaCodecAudioRenderer extends MediaCodecRenderer implements Media
    *     has obtained the keys necessary to decrypt encrypted regions of the media.
    */
   public MediaCodecAudioRenderer(MediaCodecSelector mediaCodecSelector,
-      DrmSessionManager<FrameworkMediaCrypto> drmSessionManager,
-      boolean playClearSamplesWithoutKeys) {
+                                 DrmSessionManager<FrameworkMediaCrypto> drmSessionManager,
+                                 boolean playClearSamplesWithoutKeys) {
     this(mediaCodecSelector, drmSessionManager, playClearSamplesWithoutKeys, null, null);
   }
 
@@ -89,7 +89,7 @@ public class MediaCodecAudioRenderer extends MediaCodecRenderer implements Media
    * @param eventListener A listener of events. May be null if delivery of events is not required.
    */
   public MediaCodecAudioRenderer(MediaCodecSelector mediaCodecSelector, Handler eventHandler,
-      AudioRendererEventListener eventListener) {
+                                 AudioRendererEventListener eventListener) {
     this(mediaCodecSelector, null, true, eventHandler, eventListener);
   }
 
@@ -107,11 +107,11 @@ public class MediaCodecAudioRenderer extends MediaCodecRenderer implements Media
    * @param eventListener A listener of events. May be null if delivery of events is not required.
    */
   public MediaCodecAudioRenderer(MediaCodecSelector mediaCodecSelector,
-      DrmSessionManager<FrameworkMediaCrypto> drmSessionManager,
-      boolean playClearSamplesWithoutKeys, Handler eventHandler,
-      AudioRendererEventListener eventListener) {
+                                 DrmSessionManager<FrameworkMediaCrypto> drmSessionManager,
+                                 boolean playClearSamplesWithoutKeys, Handler eventHandler,
+                                 AudioRendererEventListener eventListener) {
     this(mediaCodecSelector, drmSessionManager, playClearSamplesWithoutKeys, eventHandler,
-        eventListener, null);
+            eventListener, null);
   }
 
   /**
@@ -132,10 +132,10 @@ public class MediaCodecAudioRenderer extends MediaCodecRenderer implements Media
    *     output.
    */
   public MediaCodecAudioRenderer(MediaCodecSelector mediaCodecSelector,
-      DrmSessionManager<FrameworkMediaCrypto> drmSessionManager,
-      boolean playClearSamplesWithoutKeys, Handler eventHandler,
-      AudioRendererEventListener eventListener, AudioCapabilities audioCapabilities,
-      AudioProcessor... audioProcessors) {
+                                 DrmSessionManager<FrameworkMediaCrypto> drmSessionManager,
+                                 boolean playClearSamplesWithoutKeys, Handler eventHandler,
+                                 AudioRendererEventListener eventListener, AudioCapabilities audioCapabilities,
+                                 AudioProcessor... audioProcessors) {
     super(C.TRACK_TYPE_AUDIO, mediaCodecSelector, drmSessionManager, playClearSamplesWithoutKeys);
     audioTrack = new AudioTrack(audioCapabilities, audioProcessors, new AudioTrackListener());
     eventDispatcher = new EventDispatcher(eventHandler, eventListener);
@@ -143,7 +143,7 @@ public class MediaCodecAudioRenderer extends MediaCodecRenderer implements Media
 
   @Override
   protected int supportsFormat(MediaCodecSelector mediaCodecSelector, Format format)
-      throws DecoderQueryException {
+          throws DecoderQueryException {
     String mimeType = format.sampleMimeType;
     if (!MimeTypes.isAudio(mimeType)) {
       return FORMAT_UNSUPPORTED_TYPE;
@@ -158,17 +158,17 @@ public class MediaCodecAudioRenderer extends MediaCodecRenderer implements Media
     }
     // Note: We assume support for unknown sampleRate and channelCount.
     boolean decoderCapable = Util.SDK_INT < 21
-        || ((format.sampleRate == Format.NO_VALUE
-        || decoderInfo.isAudioSampleRateSupportedV21(format.sampleRate))
-        && (format.channelCount == Format.NO_VALUE
-        ||  decoderInfo.isAudioChannelCountSupportedV21(format.channelCount)));
+            || ((format.sampleRate == Format.NO_VALUE
+            || decoderInfo.isAudioSampleRateSupportedV21(format.sampleRate))
+            && (format.channelCount == Format.NO_VALUE
+            ||  decoderInfo.isAudioChannelCountSupportedV21(format.channelCount)));
     int formatSupport = decoderCapable ? FORMAT_HANDLED : FORMAT_EXCEEDS_CAPABILITIES;
     return ADAPTIVE_NOT_SEAMLESS | tunnelingSupport | formatSupport;
   }
 
   @Override
   protected MediaCodecInfo getDecoderInfo(MediaCodecSelector mediaCodecSelector,
-      Format format, boolean requiresSecureDecoder) throws DecoderQueryException {
+                                          Format format, boolean requiresSecureDecoder) throws DecoderQueryException {
     if (allowPassthrough(format.sampleMimeType) && AmazonQuirks.useDefaultPassthroughDecoder()) { // AMZN_CHANGE_ONELINE
       MediaCodecInfo passthroughDecoderInfo = mediaCodecSelector.getPassthroughDecoderInfo();
       if (passthroughDecoderInfo != null) {
@@ -194,7 +194,7 @@ public class MediaCodecAudioRenderer extends MediaCodecRenderer implements Media
 
   @Override
   protected void configureCodec(MediaCodecInfo codecInfo, MediaCodec codec, Format format,
-      MediaCrypto crypto) {
+                                MediaCrypto crypto) {
     log.setTAG (codecInfo.name + "-" + TAG); // AMZN_CHANGE_ONELINE
     codecNeedsDiscardChannelsWorkaround = codecNeedsDiscardChannelsWorkaround(codecInfo.name);
     if (passthroughEnabled) {
@@ -216,7 +216,7 @@ public class MediaCodecAudioRenderer extends MediaCodecRenderer implements Media
 
   @Override
   protected void onCodecInitialized(String name, long initializedTimestampMs,
-      long initializationDurationMs) {
+                                    long initializationDurationMs) {
     eventDispatcher.decoderInitialized(name, initializedTimestampMs, initializationDurationMs);
   }
 
@@ -227,21 +227,17 @@ public class MediaCodecAudioRenderer extends MediaCodecRenderer implements Media
     // If the input format is anything other than PCM then we assume that the audio decoder will
     // output 16-bit PCM.
     pcmEncoding = MimeTypes.AUDIO_RAW.equals(newFormat.sampleMimeType) ? newFormat.pcmEncoding
-        : C.ENCODING_PCM_16BIT;
+            : C.ENCODING_PCM_16BIT;
     channelCount = newFormat.channelCount;
   }
 
   @Override
 
   protected void onOutputFormatChanged(MediaCodec codec, MediaFormat outputFormat)
-    throws ExoPlaybackException {
+          throws ExoPlaybackException {
     // AMZN_CHANGE_BEGIN
     log.i("onOutputFormatChanged: outputFormat:" + outputFormat
-<<<<<<< HEAD:exoplayer2/core/src/main/java/com/google/android/exoplayer2/audio/MediaCodecAudioRenderer.java
-            + ", codec:" + codec.toString());
-=======
             + ", codec:" + codec);
->>>>>>> 48dfa486d03d990c986c08386f7e2d27b82f97b9:library/core/src/main/java/com/google/android/exoplayer2/audio/MediaCodecAudioRenderer.java
 
     // Some platform dolby decoders may output mime types depending on the
     // audio capabilities of the connected device and Dolby settings. So, as a general rule, if
@@ -300,7 +296,7 @@ public class MediaCodecAudioRenderer extends MediaCodecRenderer implements Media
    * @see AudioTrack.Listener#onUnderrun(int, long, long)
    */
   protected void onAudioTrackUnderrun(int bufferSize, long bufferSizeMs,
-      long elapsedSinceLastFeedMs) {
+                                      long elapsedSinceLastFeedMs) {
     // Do nothing.
   }
 
@@ -374,7 +370,7 @@ public class MediaCodecAudioRenderer extends MediaCodecRenderer implements Media
     long newCurrentPositionUs = audioTrack.getCurrentPositionUs(isEnded());
     if (newCurrentPositionUs != AudioTrack.CURRENT_POSITION_NOT_SET) {
       currentPositionUs = allowPositionDiscontinuity ? newCurrentPositionUs
-          : Math.max(currentPositionUs, newCurrentPositionUs);
+              : Math.max(currentPositionUs, newCurrentPositionUs);
       allowPositionDiscontinuity = false;
     }
     return currentPositionUs;
@@ -392,8 +388,8 @@ public class MediaCodecAudioRenderer extends MediaCodecRenderer implements Media
 
   @Override
   protected boolean processOutputBuffer(long positionUs, long elapsedRealtimeUs, MediaCodec codec,
-      ByteBuffer buffer, int bufferIndex, int bufferFlags, long bufferPresentationTimeUs,
-      boolean shouldSkip) throws ExoPlaybackException {
+                                        ByteBuffer buffer, int bufferIndex, int bufferFlags, long bufferPresentationTimeUs,
+                                        boolean shouldSkip) throws ExoPlaybackException {
 
     // AMZN_CHANGE_BEGIN
     if (log.allowDebug()) {
@@ -464,9 +460,9 @@ public class MediaCodecAudioRenderer extends MediaCodecRenderer implements Media
   private static boolean codecNeedsDiscardChannelsWorkaround(String codecName) {
     // The workaround applies to Samsung Galaxy S6 and Samsung Galaxy S7.
     return Util.SDK_INT < 24 && "OMX.SEC.aac.dec".equals(codecName)
-        && "samsung".equals(Util.MANUFACTURER)
-        && (Util.DEVICE.startsWith("zeroflte") || Util.DEVICE.startsWith("herolte")
-        || Util.DEVICE.startsWith("heroqlte"));
+            && "samsung".equals(Util.MANUFACTURER)
+            && (Util.DEVICE.startsWith("zeroflte") || Util.DEVICE.startsWith("herolte")
+            || Util.DEVICE.startsWith("heroqlte"));
   }
 
   private final class AudioTrackListener implements AudioTrack.Listener {
