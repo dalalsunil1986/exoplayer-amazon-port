@@ -712,7 +712,12 @@ public class PlaybackControlView extends FrameLayout {
     if (fastForwardMs <= 0) {
       return;
     }
-    seekTo(Math.min(player.getCurrentPosition() + fastForwardMs, player.getDuration()));
+    long durationMs = player.getDuration();
+    long seekPositionMs = player.getCurrentPosition() + fastForwardMs;
+    if (durationMs != C.TIME_UNSET) {
+      seekPositionMs = Math.min(seekPositionMs, durationMs);
+    }
+    seekTo(seekPositionMs);
   }
 
   private void seekTo(long positionMs) {
@@ -875,7 +880,7 @@ public class PlaybackControlView extends FrameLayout {
       OnClickListener {
 
     @Override
-    public void onScrubStart(TimeBar timeBar) {
+    public void onScrubStart(TimeBar timeBar, long position) {
       removeCallbacks(hideAction);
       scrubbing = true;
     }

@@ -263,11 +263,11 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
     super.onStarted();
     droppedFrames = 0;
     droppedFrameAccumulationStartTimeMs = SystemClock.elapsedRealtime();
-    joiningDeadlineMs = C.TIME_UNSET;
   }
 
   @Override
   protected void onStopped() {
+    joiningDeadlineMs = C.TIME_UNSET;
     maybeNotifyDroppedFrames();
     super.onStopped();
   }
@@ -390,9 +390,15 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
   }
 
   @Override
+<<<<<<< HEAD:exoplayer2/core/src/main/java/com/google/android/exoplayer2/video/MediaCodecVideoRenderer.java
   protected void onOutputFormatChanged(MediaCodec codec, android.media.MediaFormat outputFormat) {
     log.i("onOutputFormatChanged: outputFormat:" + outputFormat
             + ", codec:" + codec.toString());
+=======
+  protected void onOutputFormatChanged(MediaCodec codec, MediaFormat outputFormat) {
+    log.i("onOutputFormatChanged: outputFormat:" + outputFormat
+            + ", codec:" + codec);
+>>>>>>> 48dfa486d03d990c986c08386f7e2d27b82f97b9:library/core/src/main/java/com/google/android/exoplayer2/video/MediaCodecVideoRenderer.java
     boolean hasCrop = outputFormat.containsKey(KEY_CROP_RIGHT)
         && outputFormat.containsKey(KEY_CROP_LEFT) && outputFormat.containsKey(KEY_CROP_BOTTOM)
         && outputFormat.containsKey(KEY_CROP_TOP);
@@ -428,11 +434,9 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
   @Override
   protected boolean canReconfigureCodec(MediaCodec codec, boolean codecIsAdaptive,
       Format oldFormat, Format newFormat) {
-    return areAdaptationCompatible(oldFormat, newFormat)
+    return areAdaptationCompatible(codecIsAdaptive, oldFormat, newFormat)
         && newFormat.width <= codecMaxValues.width && newFormat.height <= codecMaxValues.height
-        && newFormat.maxInputSize <= codecMaxValues.inputSize
-        && (codecIsAdaptive
-        || (oldFormat.width == newFormat.width && oldFormat.height == newFormat.height));
+        && newFormat.maxInputSize <= codecMaxValues.inputSize;
   }
 
   @Override
@@ -617,9 +621,10 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
   }
 
   private void maybeNotifyVideoSizeChanged() {
-    if (reportedWidth != currentWidth || reportedHeight != currentHeight
+    if ((currentWidth != Format.NO_VALUE || currentHeight != Format.NO_VALUE)
+      && (reportedWidth != currentWidth || reportedHeight != currentHeight
         || reportedUnappliedRotationDegrees != currentUnappliedRotationDegrees
-        || reportedPixelWidthHeightRatio != currentPixelWidthHeightRatio) {
+        || reportedPixelWidthHeightRatio != currentPixelWidthHeightRatio)) {
       eventDispatcher.videoSizeChanged(currentWidth, currentHeight, currentUnappliedRotationDegrees,
           currentPixelWidthHeightRatio);
       reportedWidth = currentWidth;
@@ -631,8 +636,8 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
 
   private void maybeRenotifyVideoSizeChanged() {
     if (reportedWidth != Format.NO_VALUE || reportedHeight != Format.NO_VALUE) {
-      eventDispatcher.videoSizeChanged(currentWidth, currentHeight, currentUnappliedRotationDegrees,
-          currentPixelWidthHeightRatio);
+      eventDispatcher.videoSizeChanged(reportedWidth, reportedHeight,
+          reportedUnappliedRotationDegrees, reportedPixelWidthHeightRatio);
     }
   }
 
@@ -692,7 +697,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
    * @return Suitable {@link CodecMaxValues}.
    * @throws DecoderQueryException If an error occurs querying {@code codecInfo}.
    */
-  private static CodecMaxValues getCodecMaxValues(MediaCodecInfo codecInfo, Format format,
+  protected CodecMaxValues getCodecMaxValues(MediaCodecInfo codecInfo, Format format,
       Format[] streamFormats) throws DecoderQueryException {
     int maxWidth = format.width;
     int maxHeight = format.height;
@@ -704,7 +709,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
     }
     boolean haveUnknownDimensions = false;
     for (Format streamFormat : streamFormats) {
-      if (areAdaptationCompatible(format, streamFormat)) {
+      if (areAdaptationCompatible(codecInfo.adaptive, format, streamFormat)) {
         haveUnknownDimensions |= (streamFormat.width == Format.NO_VALUE
             || streamFormat.height == Format.NO_VALUE);
         maxWidth = Math.max(maxWidth, streamFormat.width);
@@ -857,17 +862,19 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
   }
 
   /**
-   * Returns whether an adaptive codec with suitable {@link CodecMaxValues} will support adaptation
-   * between two {@link Format}s.
+   * Returns whether a codec with suitable {@link CodecMaxValues} will support adaptation between
+   * two {@link Format}s.
    *
+   * @param codecIsAdaptive Whether the codec supports seamless resolution switches.
    * @param first The first format.
    * @param second The second format.
-   * @return Whether an adaptive codec with suitable {@link CodecMaxValues} will support adaptation
-   *     between two {@link Format}s.
+   * @return Whether the codec will support adaptation between the two {@link Format}s.
    */
-  private static boolean areAdaptationCompatible(Format first, Format second) {
+  private static boolean areAdaptationCompatible(boolean codecIsAdaptive, Format first,
+      Format second) {
     return first.sampleMimeType.equals(second.sampleMimeType)
-        && getRotationDegrees(first) == getRotationDegrees(second);
+        && getRotationDegrees(first) == getRotationDegrees(second)
+        && (codecIsAdaptive || (first.width == second.width && first.height == second.height));
   }
 
   private static float getPixelWidthHeightRatio(Format format) {
@@ -878,7 +885,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
     return format.rotationDegrees == Format.NO_VALUE ? 0 : format.rotationDegrees;
   }
 
-  private static final class CodecMaxValues {
+  protected static final class CodecMaxValues {
 
     public final int width;
     public final int height;

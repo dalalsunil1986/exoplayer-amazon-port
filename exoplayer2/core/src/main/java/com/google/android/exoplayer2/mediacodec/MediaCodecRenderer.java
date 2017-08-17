@@ -359,7 +359,12 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
     }
 
     codecName = decoderInfo.name; // AMZN_CHANGE_ONELINE
+<<<<<<< HEAD:exoplayer2/core/src/main/java/com/google/android/exoplayer2/mediacodec/MediaCodecRenderer.java
     codecIsAdaptive = decoderInfo.adaptive && !codecNeedsDisableAdaptationWorkaround(codecName);
+=======
+    codecIsAdaptive = decoderInfo.adaptive;
+
+>>>>>>> 48dfa486d03d990c986c08386f7e2d27b82f97b9:library/core/src/main/java/com/google/android/exoplayer2/mediacodec/MediaCodecRenderer.java
     codecNeedsDiscardToSpsWorkaround = codecNeedsDiscardToSpsWorkaround(codecName, format);
     codecNeedsFlushWorkaround = codecNeedsFlushWorkaround(codecName);
     codecNeedsAdaptationWorkaround = codecNeedsAdaptationWorkaround(codecName);
@@ -523,7 +528,7 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
     }
     if (format == null) {
       // We don't have a format yet, so try and read one.
-      buffer.clear();
+      flagsOnlyBuffer.clear();
       int result = readSource(formatHolder, flagsOnlyBuffer, true);
       if (result == C.RESULT_FORMAT_READ) {
         onInputFormatChanged(formatHolder.format);
@@ -1252,20 +1257,6 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
   private static boolean codecNeedsMonoChannelCountWorkaround(String name, Format format) {
     return Util.SDK_INT <= 18 && format.channelCount == 1
         && "OMX.MTK.AUDIO.DECODER.MP3".equals(name);
-  }
-
-  /**
-   * Returns whether the decoder is known to fail when adapting, despite advertising itself as an
-   * adaptive decoder.
-   * <p>
-   * If true is returned then we explicitly disable adaptation for the decoder.
-   *
-   * @param name The decoder name.
-   * @return True if the decoder is known to fail when adapting.
-   */
-  private static boolean codecNeedsDisableAdaptationWorkaround(String name) {
-    return Util.SDK_INT <= 19 && Util.MODEL.equals("ODROID-XU3")
-        && ("OMX.Exynos.AVC.Decoder".equals(name) || "OMX.Exynos.AVC.Decoder.secure".equals(name));
   }
 
 }

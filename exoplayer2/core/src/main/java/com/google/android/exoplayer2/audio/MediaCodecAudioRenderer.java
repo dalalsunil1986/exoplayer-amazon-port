@@ -237,7 +237,11 @@ public class MediaCodecAudioRenderer extends MediaCodecRenderer implements Media
     throws ExoPlaybackException {
     // AMZN_CHANGE_BEGIN
     log.i("onOutputFormatChanged: outputFormat:" + outputFormat
+<<<<<<< HEAD:exoplayer2/core/src/main/java/com/google/android/exoplayer2/audio/MediaCodecAudioRenderer.java
             + ", codec:" + codec.toString());
+=======
+            + ", codec:" + codec);
+>>>>>>> 48dfa486d03d990c986c08386f7e2d27b82f97b9:library/core/src/main/java/com/google/android/exoplayer2/audio/MediaCodecAudioRenderer.java
 
     // Some platform dolby decoders may output mime types depending on the
     // audio capabilities of the connected device and Dolby settings. So, as a general rule, if

@@ -92,7 +92,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
     trackGroups = TrackGroupArray.EMPTY;
     trackSelections = emptyTrackSelections;
     playbackParameters = PlaybackParameters.DEFAULT;
-    eventHandler = new Handler() {
+    Looper eventLooper = Looper.myLooper() != null ? Looper.myLooper() : Looper.getMainLooper();
+    eventHandler = new Handler(eventLooper) {
       @Override
       public void handleMessage(Message msg) {
         ExoPlayerImpl.this.handleEvent(msg);
@@ -304,10 +305,10 @@ import java.util.concurrent.CopyOnWriteArraySet;
     if (timeline.isEmpty()) {
       return 0;
     }
-    long bufferedPosition = getBufferedPosition();
+    long position = getBufferedPosition();
     long duration = getDuration();
-    return (bufferedPosition == C.TIME_UNSET || duration == C.TIME_UNSET) ? 0
-        : (int) (duration == 0 ? 100 : (bufferedPosition * 100) / duration);
+    return position == C.TIME_UNSET || duration == C.TIME_UNSET ? 0
+        : (duration == 0 ? 100 : Util.constrainValue((int) ((position * 100) / duration), 0, 100));
   }
 
   @Override

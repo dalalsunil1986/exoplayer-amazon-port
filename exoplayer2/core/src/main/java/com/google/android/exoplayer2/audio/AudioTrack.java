@@ -1431,7 +1431,7 @@ public final class AudioTrack {
           // The timestamp time base is probably wrong.
           String message = "Spurious audio timestamp (system clock mismatch): "
               + audioTimestampFramePosition + ", " + audioTimestampUs + ", " + systemClockUs + ", "
-              + playbackPositionUs;
+              + playbackPositionUs + ", " + getSubmittedFrames() + ", " + getWrittenFrames();
           if (failOnSpuriousAudioTimestamp) {
             throw new InvalidAudioTrackTimestampException(message);
           }
@@ -1442,7 +1442,7 @@ public final class AudioTrack {
           // The timestamp frame position is probably wrong.
           String message = "Spurious audio timestamp (frame position mismatch): "
               + audioTimestampFramePosition + ", " + audioTimestampUs + ", " + systemClockUs + ", "
-              + playbackPositionUs;
+              + playbackPositionUs + ", " + getSubmittedFrames() + ", " + getWrittenFrames();
           if (failOnSpuriousAudioTimestamp) {
             throw new InvalidAudioTrackTimestampException(message);
           }
