@@ -45,4 +45,3 @@ ext {
     releaseArtifact = 'exoplayer-hls'
     releaseDescription = 'The ExoPlayer library HLS module.'
 }
-apply from: '../../publish.gradle'

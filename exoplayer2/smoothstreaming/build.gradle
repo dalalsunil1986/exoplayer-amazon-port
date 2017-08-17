@@ -51,4 +51,3 @@ ext {
     releaseArtifact = 'exoplayer-smoothstreaming'
     releaseDescription = 'The ExoPlayer library SmoothStreaming module.'
 }
-apply from: '../../publish.gradle'
