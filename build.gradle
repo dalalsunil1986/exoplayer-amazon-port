@@ -49,8 +49,7 @@ allprojects {
         releaseUserOrg = 'google'
         releaseGroupId = 'com.google.android.exoplayer'
         releaseVersion = 'r2.4.4'
-        releaseWebsite = 'https://github.com/google/ExoPlayer'
-    }
+        releaseWebsite = 'https://github.com/google/ExoPlayer' }
     if (it.hasProperty('externalBuildDir')) {
         if (!new File(externalBuildDir).isAbsolute()) {
             externalBuildDir = new File(rootDir, externalBuildDir)
