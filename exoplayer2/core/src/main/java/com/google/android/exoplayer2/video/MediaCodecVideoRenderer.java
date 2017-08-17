@@ -62,7 +62,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
 
   // Long edge length in pixels for standard video formats, in decreasing in order.
   private static final int[] STANDARD_LONG_EDGE_VIDEO_PX = new int[] {
-      1920, 1600, 1440, 1280, 960, 854, 640, 540, 480};
+          1920, 1600, 1440, 1280, 960, 854, 640, 540, 480};
 
   private final VideoFrameReleaseTimeHelper frameReleaseTimeHelper;
   private final EventDispatcher eventDispatcher;
@@ -113,7 +113,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
    *     can attempt to seamlessly join an ongoing playback.
    */
   public MediaCodecVideoRenderer(Context context, MediaCodecSelector mediaCodecSelector,
-      long allowedJoiningTimeMs) {
+                                 long allowedJoiningTimeMs) {
     this(context, mediaCodecSelector, allowedJoiningTimeMs, null, null, -1);
   }
 
@@ -129,10 +129,10 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
    *     invocations of {@link VideoRendererEventListener#onDroppedFrames(int, long)}.
    */
   public MediaCodecVideoRenderer(Context context, MediaCodecSelector mediaCodecSelector,
-      long allowedJoiningTimeMs, Handler eventHandler, VideoRendererEventListener eventListener,
-      int maxDroppedFrameCountToNotify) {
+                                 long allowedJoiningTimeMs, Handler eventHandler, VideoRendererEventListener eventListener,
+                                 int maxDroppedFrameCountToNotify) {
     this(context, mediaCodecSelector, allowedJoiningTimeMs, null, false, eventHandler,
-        eventListener, maxDroppedFrameCountToNotify);
+            eventListener, maxDroppedFrameCountToNotify);
   }
 
   /**
@@ -154,9 +154,9 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
    *     invocations of {@link VideoRendererEventListener#onDroppedFrames(int, long)}.
    */
   public MediaCodecVideoRenderer(Context context, MediaCodecSelector mediaCodecSelector,
-      long allowedJoiningTimeMs, DrmSessionManager<FrameworkMediaCrypto> drmSessionManager,
-      boolean playClearSamplesWithoutKeys, Handler eventHandler,
-      VideoRendererEventListener eventListener, int maxDroppedFramesToNotify) {
+                                 long allowedJoiningTimeMs, DrmSessionManager<FrameworkMediaCrypto> drmSessionManager,
+                                 boolean playClearSamplesWithoutKeys, Handler eventHandler,
+                                 VideoRendererEventListener eventListener, int maxDroppedFramesToNotify) {
     super(C.TRACK_TYPE_VIDEO, mediaCodecSelector, drmSessionManager, playClearSamplesWithoutKeys);
     this.allowedJoiningTimeMs = allowedJoiningTimeMs;
     this.maxDroppedFramesToNotify = maxDroppedFramesToNotify;
@@ -174,7 +174,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
 
   @Override
   protected int supportsFormat(MediaCodecSelector mediaCodecSelector, Format format)
-      throws DecoderQueryException {
+          throws DecoderQueryException {
     String mimeType = format.sampleMimeType;
     if (!MimeTypes.isVideo(mimeType)) {
       return FORMAT_UNSUPPORTED_TYPE;
@@ -187,7 +187,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
       }
     }
     MediaCodecInfo decoderInfo = mediaCodecSelector.getDecoderInfo(mimeType,
-        requiresSecureDecryption);
+            requiresSecureDecryption);
     if (decoderInfo == null) {
       return FORMAT_UNSUPPORTED_SUBTYPE;
     }
@@ -196,12 +196,12 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
     if (decoderCapable && format.width > 0 && format.height > 0) {
       if (Util.SDK_INT >= 21) {
         decoderCapable = decoderInfo.isVideoSizeAndRateSupportedV21(format.width, format.height,
-            format.frameRate);
+                format.frameRate);
       } else {
         decoderCapable = format.width * format.height <= MediaCodecUtil.maxH264DecodableFrameSize();
         if (!decoderCapable) {
           Log.d(TAG, "FalseCheck [legacyFrameSize, " + format.width + "x" + format.height + "] ["
-              + Util.DEVICE_DEBUG_INFO + "]");
+                  + Util.DEVICE_DEBUG_INFO + "]");
         }
       }
     }
@@ -347,7 +347,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
 
   @Override
   protected void configureCodec(MediaCodecInfo codecInfo, MediaCodec codec, Format format,
-      MediaCrypto crypto) throws DecoderQueryException {
+                                MediaCrypto crypto) throws DecoderQueryException {
     codecMaxValues = getCodecMaxValues(codecInfo, format, streamFormats);
     MediaFormat mediaFormat = getMediaFormat(format, codecMaxValues,
             deviceNeedsAutoFrcWorkaround, codecName, tunnelingAudioSessionId); // AMZN_CHANGE_ONELINE
@@ -369,7 +369,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
 
   @Override
   protected void onCodecInitialized(String name, long initializedTimestampMs,
-      long initializationDurationMs) {
+                                    long initializationDurationMs) {
     eventDispatcher.decoderInitialized(name, initializedTimestampMs, initializationDurationMs);
   }
 
@@ -390,24 +390,18 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
   }
 
   @Override
-<<<<<<< HEAD:exoplayer2/core/src/main/java/com/google/android/exoplayer2/video/MediaCodecVideoRenderer.java
-  protected void onOutputFormatChanged(MediaCodec codec, android.media.MediaFormat outputFormat) {
-    log.i("onOutputFormatChanged: outputFormat:" + outputFormat
-            + ", codec:" + codec.toString());
-=======
   protected void onOutputFormatChanged(MediaCodec codec, MediaFormat outputFormat) {
     log.i("onOutputFormatChanged: outputFormat:" + outputFormat
             + ", codec:" + codec);
->>>>>>> 48dfa486d03d990c986c08386f7e2d27b82f97b9:library/core/src/main/java/com/google/android/exoplayer2/video/MediaCodecVideoRenderer.java
     boolean hasCrop = outputFormat.containsKey(KEY_CROP_RIGHT)
-        && outputFormat.containsKey(KEY_CROP_LEFT) && outputFormat.containsKey(KEY_CROP_BOTTOM)
-        && outputFormat.containsKey(KEY_CROP_TOP);
+            && outputFormat.containsKey(KEY_CROP_LEFT) && outputFormat.containsKey(KEY_CROP_BOTTOM)
+            && outputFormat.containsKey(KEY_CROP_TOP);
     currentWidth = hasCrop
-        ? outputFormat.getInteger(KEY_CROP_RIGHT) - outputFormat.getInteger(KEY_CROP_LEFT) + 1
-        : outputFormat.getInteger(MediaFormat.KEY_WIDTH);
+            ? outputFormat.getInteger(KEY_CROP_RIGHT) - outputFormat.getInteger(KEY_CROP_LEFT) + 1
+            : outputFormat.getInteger(MediaFormat.KEY_WIDTH);
     currentHeight = hasCrop
-        ? outputFormat.getInteger(KEY_CROP_BOTTOM) - outputFormat.getInteger(KEY_CROP_TOP) + 1
-        : outputFormat.getInteger(MediaFormat.KEY_HEIGHT);
+            ? outputFormat.getInteger(KEY_CROP_BOTTOM) - outputFormat.getInteger(KEY_CROP_TOP) + 1
+            : outputFormat.getInteger(MediaFormat.KEY_HEIGHT);
     currentPixelWidthHeightRatio = pendingPixelWidthHeightRatio;
     log.i("hasCrop = " + hasCrop +
             " currentWidth = " + currentWidth +
@@ -433,16 +427,16 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
 
   @Override
   protected boolean canReconfigureCodec(MediaCodec codec, boolean codecIsAdaptive,
-      Format oldFormat, Format newFormat) {
+                                        Format oldFormat, Format newFormat) {
     return areAdaptationCompatible(codecIsAdaptive, oldFormat, newFormat)
-        && newFormat.width <= codecMaxValues.width && newFormat.height <= codecMaxValues.height
-        && newFormat.maxInputSize <= codecMaxValues.inputSize;
+            && newFormat.width <= codecMaxValues.width && newFormat.height <= codecMaxValues.height
+            && newFormat.maxInputSize <= codecMaxValues.inputSize;
   }
 
   @Override
   protected boolean processOutputBuffer(long positionUs, long elapsedRealtimeUs, MediaCodec codec,
-      ByteBuffer buffer, int bufferIndex, int bufferFlags, long bufferPresentationTimeUs,
-      boolean shouldSkip) {
+                                        ByteBuffer buffer, int bufferIndex, int bufferFlags, long bufferPresentationTimeUs,
+                                        boolean shouldSkip) {
     if (log.allowDebug()) {
       log.d("processOutputBuffer: positionUs = " + positionUs +
               " elapsedRealtimeUs = " + elapsedRealtimeUs +
@@ -479,7 +473,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
 
     // Apply a timestamp adjustment, if there is one.
     long adjustedReleaseTimeNs = frameReleaseTimeHelper.adjustReleaseTime(
-        bufferPresentationTimeUs, unadjustedFrameReleaseTimeNs);
+            bufferPresentationTimeUs, unadjustedFrameReleaseTimeNs);
     earlyUs = (adjustedReleaseTimeNs - systemTimeNs) / 1000;
 
     if (shouldDropOutputBuffer(earlyUs, elapsedRealtimeUs)) {
@@ -546,7 +540,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
     droppedFrames++;
     consecutiveDroppedFrameCount++;
     decoderCounters.maxConsecutiveDroppedOutputBufferCount = Math.max(consecutiveDroppedFrameCount,
-        decoderCounters.maxConsecutiveDroppedOutputBufferCount);
+            decoderCounters.maxConsecutiveDroppedOutputBufferCount);
     if (droppedFrames == maxDroppedFramesToNotify) {
       maybeNotifyDroppedFrames();
     }
@@ -582,7 +576,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
 
   private void setJoiningDeadlineMs() {
     joiningDeadlineMs = allowedJoiningTimeMs > 0
-        ? (SystemClock.elapsedRealtime() + allowedJoiningTimeMs) : C.TIME_UNSET;
+            ? (SystemClock.elapsedRealtime() + allowedJoiningTimeMs) : C.TIME_UNSET;
   }
 
   private void clearRenderedFirstFrame() {
@@ -622,11 +616,11 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
 
   private void maybeNotifyVideoSizeChanged() {
     if ((currentWidth != Format.NO_VALUE || currentHeight != Format.NO_VALUE)
-      && (reportedWidth != currentWidth || reportedHeight != currentHeight
-        || reportedUnappliedRotationDegrees != currentUnappliedRotationDegrees
-        || reportedPixelWidthHeightRatio != currentPixelWidthHeightRatio)) {
+            && (reportedWidth != currentWidth || reportedHeight != currentHeight
+            || reportedUnappliedRotationDegrees != currentUnappliedRotationDegrees
+            || reportedPixelWidthHeightRatio != currentPixelWidthHeightRatio)) {
       eventDispatcher.videoSizeChanged(currentWidth, currentHeight, currentUnappliedRotationDegrees,
-          currentPixelWidthHeightRatio);
+              currentPixelWidthHeightRatio);
       reportedWidth = currentWidth;
       reportedHeight = currentHeight;
       reportedUnappliedRotationDegrees = currentUnappliedRotationDegrees;
@@ -637,7 +631,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
   private void maybeRenotifyVideoSizeChanged() {
     if (reportedWidth != Format.NO_VALUE || reportedHeight != Format.NO_VALUE) {
       eventDispatcher.videoSizeChanged(reportedWidth, reportedHeight,
-          reportedUnappliedRotationDegrees, reportedPixelWidthHeightRatio);
+              reportedUnappliedRotationDegrees, reportedPixelWidthHeightRatio);
     }
   }
 
@@ -653,7 +647,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
 
   @SuppressLint("InlinedApi")
   private static MediaFormat getMediaFormat(Format format, CodecMaxValues codecMaxValues,
-      boolean deviceNeedsAutoFrcWorkaround, String codecName, int tunnelingAudioSessionId) { // AMZN_CHANGE_ONELINE
+                                            boolean deviceNeedsAutoFrcWorkaround, String codecName, int tunnelingAudioSessionId) { // AMZN_CHANGE_ONELINE
     MediaFormat frameworkMediaFormat = format.getFrameworkMediaFormatV16();
     // Set the maximum adaptive video dimensions.
     frameworkMediaFormat.setInteger(MediaFormat.KEY_MAX_WIDTH, codecMaxValues.width);
@@ -698,7 +692,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
    * @throws DecoderQueryException If an error occurs querying {@code codecInfo}.
    */
   protected CodecMaxValues getCodecMaxValues(MediaCodecInfo codecInfo, Format format,
-      Format[] streamFormats) throws DecoderQueryException {
+                                             Format[] streamFormats) throws DecoderQueryException {
     int maxWidth = format.width;
     int maxHeight = format.height;
     int maxInputSize = getMaxInputSize(format);
@@ -711,7 +705,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
     for (Format streamFormat : streamFormats) {
       if (areAdaptationCompatible(codecInfo.adaptive, format, streamFormat)) {
         haveUnknownDimensions |= (streamFormat.width == Format.NO_VALUE
-            || streamFormat.height == Format.NO_VALUE);
+                || streamFormat.height == Format.NO_VALUE);
         maxWidth = Math.max(maxWidth, streamFormat.width);
         maxHeight = Math.max(maxHeight, streamFormat.height);
         maxInputSize = Math.max(maxInputSize, getMaxInputSize(streamFormat));
@@ -724,7 +718,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
         maxWidth = Math.max(maxWidth, codecMaxSize.x);
         maxHeight = Math.max(maxHeight, codecMaxSize.y);
         maxInputSize = Math.max(maxInputSize,
-            getMaxInputSize(format.sampleMimeType, maxWidth, maxHeight));
+                getMaxInputSize(format.sampleMimeType, maxWidth, maxHeight));
         Log.w(TAG, "Codec max resolution adjusted to: " + maxWidth + "x" + maxHeight);
       }
     }
@@ -742,7 +736,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
    * @throws DecoderQueryException If an error occurs querying {@code codecInfo}.
    */
   private static Point getCodecMaxSize(MediaCodecInfo codecInfo, Format format)
-      throws DecoderQueryException {
+          throws DecoderQueryException {
     boolean isVerticalVideo = format.height > format.width;
     int formatLongEdgePx = isVerticalVideo ? format.height : format.width;
     int formatShortEdgePx = isVerticalVideo ? format.width : format.height;
@@ -754,7 +748,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
         return null;
       } else if (Util.SDK_INT >= 21) {
         Point alignedSize = codecInfo.alignVideoSizeV21(isVerticalVideo ? shortEdgePx : longEdgePx,
-            isVerticalVideo ? longEdgePx : shortEdgePx);
+                isVerticalVideo ? longEdgePx : shortEdgePx);
         float frameRate = format.frameRate;
         if (codecInfo.isVideoSizeAndRateSupportedV21(alignedSize.x, alignedSize.y, frameRate)) {
           return alignedSize;
@@ -765,7 +759,7 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
         shortEdgePx = Util.ceilDivide(shortEdgePx, 16) * 16;
         if (longEdgePx * shortEdgePx <= MediaCodecUtil.maxH264DecodableFrameSize()) {
           return new Point(isVerticalVideo ? shortEdgePx : longEdgePx,
-              isVerticalVideo ? longEdgePx : shortEdgePx);
+                  isVerticalVideo ? longEdgePx : shortEdgePx);
         }
       }
     }
@@ -871,10 +865,10 @@ public class MediaCodecVideoRenderer extends MediaCodecRenderer {
    * @return Whether the codec will support adaptation between the two {@link Format}s.
    */
   private static boolean areAdaptationCompatible(boolean codecIsAdaptive, Format first,
-      Format second) {
+                                                 Format second) {
     return first.sampleMimeType.equals(second.sampleMimeType)
-        && getRotationDegrees(first) == getRotationDegrees(second)
-        && (codecIsAdaptive || (first.width == second.width && first.height == second.height));
+            && getRotationDegrees(first) == getRotationDegrees(second)
+            && (codecIsAdaptive || (first.width == second.width && first.height == second.height));
   }
 
   private static float getPixelWidthHeightRatio(Format format) {
